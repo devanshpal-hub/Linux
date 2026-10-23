@@ -2,6 +2,7 @@ docker_install() {
     local architecture codename
     codename="${VERSION_CODENAME:-${UBUNTU_CODENAME:-}}"
 
+    action_start "Docker Engine and Compose installation"
     log_info "Installing Docker Engine and Docker Compose."
     install -m 0755 -d /etc/apt/keyrings
     DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates curl
@@ -18,5 +19,6 @@ docker_install() {
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
         docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
     systemctl enable --now docker
+    action_complete "Docker Engine and Compose installation"
     log_info "Docker Engine is installed and enabled."
 }

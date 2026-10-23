@@ -22,7 +22,7 @@ Edit [config.conf](./config.conf). Every `yes`/`no` option is lowercase.
 | `DOCKER_INSTALL` | Install Docker Engine, CLI, Buildx, and Compose plugin |
 | `UPDATE_SYSTEM` | Refresh APT indexes and upgrade installed packages |
 | `ENABLE_FIREWALL` | Install and enable UFW with the configured allow rules |
-| `ENABLE_LOGGING` | Write a timestamped run log to `LOG_FILE` |
+| `ENABLE_LOGGING` | Write a concise timestamped audit log to `LOG_FILE` |
 | `NEW_USER` | Create or configure the account named by `NEW_USERNAME` |
 | `NEW_USERNAME` | Account to create when `NEW_USER=yes` |
 | `NEW_USER_SUDO` | Add that account to the `sudo` group |
@@ -53,5 +53,8 @@ is: configuration validation, optional system upgrade, package and Docker
 installation, optional user configuration, and optional firewall setup.
 
 When logging is enabled, the default log is
-`/var/log/linux-server-automation.log`. Command failures stop the run, are
-reported, and are written to the log when logging is enabled.
+`/var/log/linux-server-automation.log`. Detailed command output and progress
+messages remain in the terminal. The log contains timestamped action
+start/completion/failure states and versions of configured packages that were
+installed. Command failures stop the run, are reported in the terminal, and
+are recorded in the log.

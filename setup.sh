@@ -39,18 +39,25 @@ on_error() {
     local status="$1"
     local line="$2"
     trap - ERR
+    if [[ -n "$CURRENT_ACTION" ]]; then
+        audit_log FAILED "$CURRENT_ACTION (exit status $status)"
+    fi
+    audit_log FAILED "Provisioning (setup.sh line $line, exit status $status)"
     log_error "Provisioning failed at setup.sh line ${line} (exit status ${status})." || \
         printf 'Provisioning failed at setup.sh line %s (exit status %s).\n' "$line" "$status" >&2
     exit "$status"
 }
 trap 'on_error "$?" "$LINENO"' ERR
 
+log_init
+action_start "Configuration validation"
 validation
 
-log_init
+action_complete "Configuration validation"
 log_info "Starting Linux server provisioning."
 update_system
 installing
 configure_user
 configure_firewall
+audit_log COMPLETE "Provisioning"
 log_info "Server provisioning completed successfully."

@@ -4,12 +4,15 @@ configure_firewall() {
 
     if [[ "$ENABLE_FIREWALL" != yes ]]; then
         log_info "Firewall configuration skipped by configuration."
+        action_skipped "Firewall configuration"
         return 0
     fi
 
+    action_start "Firewall configuration"
     if ! command -v ufw >/dev/null 2>&1; then
         log_info "Installing UFW."
         DEBIAN_FRONTEND=noninteractive apt-get install -y ufw
+        log_installed_package_versions ufw
     fi
 
     log_info "Configuring UFW; allowing SSH on TCP port $FIREWALL_SSH_PORT."
@@ -27,5 +30,6 @@ configure_firewall() {
     ufw default allow outgoing
     ufw --force enable
     ufw status verbose
+    action_complete "Firewall configuration"
     log_info "UFW is enabled."
 }

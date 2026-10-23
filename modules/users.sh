@@ -4,9 +4,11 @@ configure_user() {
 
     if [[ "$NEW_USER" != yes ]]; then
         log_info "User creation and permission configuration skipped by configuration."
+        action_skipped "User creation and permission configuration"
         return 0
     fi
 
+    action_start "User creation and permission configuration"
     if ! id "$NEW_USERNAME" >/dev/null 2>&1; then
         log_info "Creating user $NEW_USERNAME."
         useradd --create-home --shell /bin/bash -- "$NEW_USERNAME"
@@ -35,4 +37,5 @@ configure_user() {
         usermod --append --groups "$group" -- "$NEW_USERNAME"
         log_info "Added $NEW_USERNAME to group $group."
     done
+    action_complete "User creation and permission configuration"
 }
